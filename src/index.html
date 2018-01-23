@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>接口测试</title>
+<meta name="viewport" content="width=device-width">
+</head>
+<body>
+<!-- https://flyerboy.github.io/2016/12/18/vue_tree/
+利用组件实现 tree，主要核心思想就是如果存在 children 节点的话，就递归调用 tree 组件。 -->
+<div id="app">
+    <div class="commonParam">
+        <button class="btn btn-primary">url</button>
+        <input type="text" v-model="url" class="form-control">
+    </div>
+    <div class="commonParam">
+        <button class="btn btn-primary">call</button>
+        <input type="text" v-model="call" class="form-control">
+    </div>
+    <div class="commonParam">
+        <button class="btn btn-primary">ua</button>
+        <input type="text" v-model="ua" class="form-control">
+    </div>
+    <div class="commonParam">
+        <button class="btn btn-primary">signKey</button>
+        <input type="text" v-model="signKey" class="form-control">
+    </div>
+
+    <tree :node="root" length="1" ref="treeParent"></tree>
+
+    <div style="margin: 35px;">
+        <button class="btn btn-success" @click="preview">Preview</button>
+        <button class="btn btn-success" @click="test">Test</button>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- <div class="col-sm-6">
+                <div class="text-center">原始数据</div>
+                <pre>{{originData}}</pre>
+            </div> -->
+            <div class="col-sm-12" v-if="previewParamsData">
+                <div class="text-center">预览请求参数</div>
+                <pre>{{previewParamsData}}</pre>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 100%;margin: 20px 0;border: 1px dotted #000;"></div>
+
+    <div class="container-fluid" v-if="httpResult">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="text-center">请求响应<span v-show="httpResultStatus">成功</span><span v-show="!httpResultStatus">失败</span></div>
+                <pre :class="{httpSuccess: httpResultStatus, httpFail: !httpResultStatus}">{{httpResult}}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 实现模板 -->
+<template id="tree">
+    <div class="treeWrapper">
+        <div v-if="node.name">
+            <div>
+                <button class="btn btn-info" @click="add">+</button>
+                <button class="btn btn-danger" @click="remove">-</button>
+                <button class="btn btn-primary" @click="edit">{{ node.name }}</button>
+                <input type="text" v-model="node.val" v-show="node.name !== 'params' && selected !== 2 && !hasChildren" @blur="blurAutoConvert" class="form-control" :class="{number: selected === 1}">
+                <select v-if="node.name !== 'params'" v-model="selected" @change="selectType" :disabled="hasChildren" class="form-control">
+                    <option v-for="option in options" :value="option.value">{{option.name}}</option>
+                </select>
+            </div>
+        </div>
+        <!-- 如果存在 children 的话，循环创建节点 -->
+        <tree
+            v-if="node.children.length"
+            v-for="(child,index) in node.children"
+            :key="index"
+            :node="child"
+            :length="node.children.length">
+        </tree>
+    </div>
+</template>
+
+<link rel="stylesheet" href="./bundle/all.css">
+<script src="./bundle/all.js"></script>
+</body>
+</html>

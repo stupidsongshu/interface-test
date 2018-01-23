@@ -1,0 +1,32 @@
+#app {
+    padding-top: 20px;
+}
+.form-control {
+    display: inline-block;
+    width: auto;
+}
+.number {
+    border: 1px solid #f00;
+}
+.commonParam {
+    margin: 4px 35px;
+}
+.treeWrapper {
+    position: relative;
+    margin: 4px 35px;
+}
+.treeWrapper::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 17px;
+    height: calc(100% - 40px);
+    border-left: 1px solid #ccc;
+}
+
+.httpSuccess {
+    color: #000;
+}
+.httpFail {
+    color: #f00;
+}
